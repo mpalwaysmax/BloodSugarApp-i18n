@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-05-31
+
+### Added
+- HbA1c estimation from recent glucose records (Nathan formula)
+- % in range (4.4-7.8 mmol/L) display in statistics card
+- Medication tracking with CRUD (name, dosage, note, timestamp)
+- Medication delete confirmation dialog
+- Medication sheet redesigned to match Record Blood Sugar style
+
+### Fixed
+- Medication dialog title now shows "Edit Medication" when editing
+- Medication timestamps displayed in list
+- Scrollable medication dialog content
+
 ## [1.0.0] - 2026-05-31
 
 ### Added
