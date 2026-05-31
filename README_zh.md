@@ -19,87 +19,97 @@
 - **数据安全**：Room 数据库 + Migration 框架，覆盖安装不丢数据
 - **隐私**：完全离线，不收集任何数据
 
-## Screenshots
+## 截图
 
-*Coming soon*
+| 主界面 | 记录弹窗 | 统计摘要 | PDF 导出 |
+|:------:|:--------:|:--------:|:--------:|
+| *即将添加* | *即将添加* | *即将添加* | *即将添加* |
 
-## Tech Stack
+## 技术栈
 
-| Component | Version | Notes |
-|-----------|---------|-------|
-| AGP | 7.4.2 | Compatible with JDK 11 |
+| 组件 | 版本 | 说明 |
+|------|------|------|
+| AGP | 7.4.2 | 兼容 JDK 11 |
 | Kotlin | 1.8.22 | Compose Compiler 1.4.8 |
 | JDK | 11 | Eclipse Adoptium |
 | Compose BOM | 2023.06.01 | |
-| Room | 2.5.2 | Using kapt |
+| Room | 2.5.2 | 使用 kapt |
 
-## Architecture
+**零第三方依赖** — PDF 生成使用 Android 原生 `PdfDocument` API，图表使用 Compose `Canvas` 绘制，无图表库、无 PDF 库。
 
-- **MVVM** without Repository layer (ViewModel → DAO direct)
-- **Jetpack Compose** for all UI
-- **Material 3** design system
-- **Room** for local database
-- **StateFlow** for reactive state management
-
-## Building
-
-```bash
-# Set JAVA_HOME (adjust path for your system)
-export JAVA_HOME="/path/to/jdk-11"
-
-# Build debug APK
-./gradlew assembleDebug
-
-# Output: app/build/outputs/apk/debug/app-debug.apk
-```
-
-## Installation
-
-1. Download the APK from releases or build from source
-2. Enable "Install from unknown sources" on your Android device
-3. Install the APK
-
-## Internationalization
-
-The app supports Chinese (default) and English. To add a new language:
-
-1. Create `app/src/main/res/values-<locale>/strings.xml`
-2. Copy all entries from `app/src/main/res/values/strings.xml`
-3. Translate the values
-
-## Data Safety
-
-- **No `fallbackToDestructiveMigration()`** — updates will never delete your data
-- Over-the-air APK updates preserve all existing records
-- Database schema changes use Room's Migration framework
-
-## Project Structure
+## 架构
 
 ```
 app/src/main/java/com/bloodsugar/
 ├── MainActivity.kt          # 入口
 ├── data/
-│   ├── AppDatabase.kt       # Room 数据库
+│   ├── AppDatabase.kt       # Room 数据库（含 Migration 框架）
 │   ├── Record.kt            # 实体：id, value, segment, note, timestamp
-│   ├── RecordDao.kt         # DAO：Flow 查询 + 统计聚合
+│   ├── RecordDao.kt         # DAO：Flow 查询 + SQL 聚合统计
 │   └── SegmentStats.kt      # 统计数据类
 ├── ui/
-│   ├── MainScreen.kt        # 主界面：标题栏 + 统计卡片 + 记录列表
-│   ├── MainViewModel.kt     # 状态管理
+│   ├── MainScreen.kt        # 主界面：标题栏 + 统计卡片 + 分组记录列表
+│   ├── MainViewModel.kt     # 状态管理（MVVM）
 │   ├── RecordSheet.kt       # 新建/编辑弹窗
-│   ├── ChartOverlay.kt      # 趋势图：Canvas 自绘
+│   ├── ChartOverlay.kt      # 趋势图（Canvas 自绘）
 │   ├── StatsSummaryCard.kt  # 统计摘要卡片（可折叠）
 │   ├── PdfExporter.kt       # PDF 报告生成（零依赖）
-│   └── theme/               # 颜色、字体、主题
+│   └── theme/               # 颜色、字体、Material 3 主题
 └── util/
     ├── GlucoseValidator.kt  # 血糖值校验（1.0-33.3 mmol/L）
     └── MealSegment.kt       # 6 个餐段枚举 + 时间推断
 ```
 
-## License
+- **MVVM** — ViewModel 直接调用 DAO（无 Repository 层、无依赖注入）
+- **Jetpack Compose** — 100% 声明式 UI
+- **Material 3** — 设计系统，支持亮色/暗色主题
+- **StateFlow** — 响应式状态管理
 
-MIT License — see [LICENSE](LICENSE) for details.
+## 编译
 
-## Privacy
+```bash
+# 设置 JAVA_HOME（根据你的系统调整路径）
+export JAVA_HOME="/path/to/jdk-11"
 
-This app is fully offline. No data is collected, transmitted, or shared. All blood sugar records are stored locally on your device only.
+# 编译调试 APK
+./gradlew assembleDebug
+
+# 输出：app/build/outputs/apk/debug/app-debug.apk
+```
+
+## 安装
+
+1. 从[ Releases ](../../releases)下载 APK，或从源码编译
+2. 在安卓设备上开启「允许安装未知来源应用」
+3. 安装 APK
+
+## 添加新语言
+
+1. 创建 `app/src/main/res/values-<locale>/strings.xml`
+2. 复制 `app/src/main/res/values/strings.xml`（中文）或 `values-en/strings.xml`（英文）中的所有条目
+3. 翻译内容
+
+## 数据安全
+
+- **不使用 `fallbackToDestructiveMigration()`** — 更新永远不会删除你的数据
+- 覆盖安装 APK 保留所有已有记录
+- 数据库结构变更使用 Room 的 `Migration` 框架，附带 SQL 脚本
+
+## 贡献
+
+欢迎贡献代码！欢迎提交 Issue 或 Pull Request。
+
+## 开源协议
+
+[MIT 协议](LICENSE) — 自由使用、修改和分发。
+
+## 为什么做这个
+
+糖尿病管理需要持续记录，但现有应用往往臃肿、带广告、或要求注册云账号。这个应用：
+
+- **极简操作** — 为觉得智能手机复杂的人群设计
+- **完全离线** — 无需账号、无需云端、不追踪数据
+- **零成本** — 无广告、无订阅、无付费墙
+- **可分享** — 一键导出 PDF，方便看诊时给医生
+
+为最需要它的人用心打造。
