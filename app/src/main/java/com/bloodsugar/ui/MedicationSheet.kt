@@ -50,7 +50,7 @@ fun MedicationSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (editingMed != null) stringResource(R.string.med_add) else stringResource(R.string.med_add),
+                        text = if (editingMed != null) stringResource(R.string.med_edit) else stringResource(R.string.med_add),
                         style = GlucoseTypography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )

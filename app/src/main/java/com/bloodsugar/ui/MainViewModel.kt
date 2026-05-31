@@ -69,6 +69,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _editingMed = MutableStateFlow<Medication?>(null)
     val editingMed: StateFlow<Medication?> = _editingMed
 
+    private val _deleteConfirmMed = MutableStateFlow<Medication?>(null)
+    val deleteConfirmMed: StateFlow<Medication?> = _deleteConfirmMed
+
     // Date range picker dialog
     private val _showDateRangeDialog = MutableStateFlow(false)
     val showDateRangeDialog: StateFlow<Boolean> = _showDateRangeDialog
@@ -226,9 +229,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteMedication(medication: Medication) {
-        viewModelScope.launch {
-            medDao.delete(medication)
-            _lastSavedEvent.value = appContext.getString(R.string.med_deleted)
+        _deleteConfirmMed.value = medication
+    }
+
+    fun confirmDeleteMedication() {
+        _deleteConfirmMed.value?.let { med ->
+            viewModelScope.launch {
+                medDao.delete(med)
+                _lastSavedEvent.value = appContext.getString(R.string.med_deleted)
+            }
+            _deleteConfirmMed.value = null
         }
+    }
+
+    fun cancelDeleteMedication() {
+        _deleteConfirmMed.value = null
     }
 }

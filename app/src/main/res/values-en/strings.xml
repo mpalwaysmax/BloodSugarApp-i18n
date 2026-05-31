@@ -76,6 +76,7 @@
     <!-- Medication -->
     <string name="med_title">Medications</string>
     <string name="med_add">Add Medication</string>
+    <string name="med_edit">Edit Medication</string>
     <string name="med_name">Medication name</string>
     <string name="med_dosage">Dosage</string>
     <string name="med_note">Note (optional)</string>
@@ -83,6 +84,7 @@
     <string name="med_saved">Medication saved</string>
     <string name="med_deleted">Medication deleted</string>
     <string name="med_delete_cd">Delete medication</string>
+    <string name="med_confirm_delete">Delete this medication record?</string>
 
     <!-- Stats Summary -->
     <string name="stats_title">Statistics Summary</string>

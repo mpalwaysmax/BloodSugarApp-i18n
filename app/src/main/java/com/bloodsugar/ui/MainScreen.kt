@@ -55,6 +55,7 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val medications by viewModel.medications.collectAsState()
     val showMedSheet by viewModel.showMedSheet.collectAsState()
     val editingMed by viewModel.editingMed.collectAsState()
+    val deleteConfirmMed by viewModel.deleteConfirmMed.collectAsState()
     val statsBySegment by viewModel.statsBySegment.collectAsState()
     val showDateRangeDialog by viewModel.showDateRangeDialog.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -324,6 +325,14 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                                             style = GlucoseTypography.caption,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
+                                        val medTime = java.time.Instant.ofEpochMilli(med.timestamp)
+                                            .atZone(java.time.ZoneId.systemDefault())
+                                            .toLocalDateTime()
+                                        Text(
+                                            medTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")),
+                                            style = GlucoseTypography.caption,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
                                         if (med.note.isNotBlank()) {
                                             Text(
                                                 med.note,
@@ -405,6 +414,32 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                     editingMed = editingMed,
                     onDismiss = { viewModel.closeMedSheet() },
                     onSave = { name, dosage, note -> viewModel.saveMedication(name, dosage, note) }
+                )
+            }
+
+            // Medication delete confirmation
+            deleteConfirmMed?.let { med ->
+                AlertDialog(
+                    onDismissRequest = { viewModel.cancelDeleteMedication() },
+                    title = {
+                        Text(stringResource(R.string.dialog_delete_title), style = GlucoseTypography.titleMedium)
+                    },
+                    text = {
+                        Text(stringResource(R.string.med_confirm_delete), style = GlucoseTypography.bodyLarge)
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = { viewModel.confirmDeleteMedication() },
+                            colors = ButtonDefaults.buttonColors(containerColor = Error)
+                        ) {
+                            Text(stringResource(R.string.btn_delete), style = GlucoseTypography.bodyLarge)
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { viewModel.cancelDeleteMedication() }) {
+                            Text(stringResource(R.string.btn_cancel), style = GlucoseTypography.bodyLarge)
+                        }
+                    }
                 )
             }
 
