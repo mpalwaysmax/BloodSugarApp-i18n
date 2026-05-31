@@ -435,11 +435,7 @@ fun BloodSugarChart(
             }
             points.forEachIndexed { index, point ->
                 val record = records[index]
-                val pointColor = when {
-                    record.value < 4.4f -> GlucoseLow
-                    record.value <= 7.8f -> GlucoseNormal
-                    else -> GlucoseHigh
-                }
+                val pointColor = glucoseColor(record.value)
 
                 // Value label above data point
                 val valueLabel = "%.1f".format(record.value)

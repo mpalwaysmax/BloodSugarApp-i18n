@@ -7,7 +7,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -540,22 +539,14 @@ fun RecordCard(
     onDelete: () -> Unit,
     glucoseUnit: GlucoseUnit = GlucoseUnit.MMOL
 ) {
-    val segment = try {
-        MealSegment.valueOf(record.segment)
-    } catch (_: Exception) {
-        MealSegment.BEFORE_BREAKFAST
-    }
+    val segment = MealSegment.safeValueOf(record.segment) ?: MealSegment.BEFORE_BREAKFAST
 
     val dateTime = Instant.ofEpochMilli(record.timestamp)
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime()
     val timeStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy/M/d HH:mm"))
 
-    val glucoseColor = when {
-        record.value < 4.4f -> GlucoseLow
-        record.value <= 7.8f -> GlucoseNormal
-        else -> GlucoseHigh
-    }
+    val glucoseColor = glucoseColor(record.value)
 
     Card(
         modifier = Modifier

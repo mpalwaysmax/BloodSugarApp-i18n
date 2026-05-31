@@ -196,9 +196,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         sb.appendLine(appContext.getString(R.string.pdf_title))
         sb.appendLine("─".repeat(20))
         stats.forEach { stat ->
-            val labelResId = try {
-                MealSegment.valueOf(stat.segment).labelResId
-            } catch (_: Exception) { R.string.stats_title }
+            val labelResId = MealSegment.safeValueOf(stat.segment)?.labelResId ?: R.string.stats_title
             sb.appendLine("${appContext.getString(labelResId)}: avg %.1f | max %.1f | min %.1f | %d${appContext.getString(R.string.stats_count_format).replace("%1\$d", "")}".format(
                 stat.avg, stat.max, stat.min, stat.count
             ))

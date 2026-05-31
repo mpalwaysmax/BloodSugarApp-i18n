@@ -2,7 +2,6 @@ package com.bloodsugar.util
 
 import com.bloodsugar.data.Record
 import java.time.Instant
-import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 /**
@@ -26,18 +25,6 @@ object HbA1cEstimator {
 
         val avgMmol = recent.map { it.value }.average().toFloat()
         return (avgMmol + 2.59f) / 1.59f
-    }
-
-    /**
-     * Get average glucose from recent records (in mmol/L).
-     */
-    fun averageGlucose(records: List<Record>, days: Int = 90): Float? {
-        val cutoff = Instant.now().minus(days.toLong(), ChronoUnit.DAYS).toEpochMilli()
-        val recent = records.filter { it.timestamp >= cutoff }
-
-        if (recent.isEmpty()) return null
-
-        return recent.map { it.value }.average().toFloat()
     }
 
     /**

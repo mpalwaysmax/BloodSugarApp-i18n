@@ -49,3 +49,9 @@ val DarkOnSurfaceVariant = Color(0xFFC4C6CF)
 
 val DarkError = Color(0xFFFFB4AB)
 val DarkOnError = Color(0xFF690005)
+
+fun glucoseColor(value: Float): Color = when {
+    value < 4.4f -> GlucoseLow
+    value <= 7.8f -> GlucoseNormal
+    else -> GlucoseHigh
+}

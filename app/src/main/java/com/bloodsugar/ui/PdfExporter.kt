@@ -64,7 +64,7 @@ object PdfExporter {
         // Stats rows
         val segmentLabels = MealSegment.values().map { context.getString(it.labelResId) }
         stats.forEach { stat ->
-            val segIndex = try { MealSegment.valueOf(stat.segment).ordinal } catch (_: Exception) { -1 }
+            val segIndex = MealSegment.safeValueOf(stat.segment)?.ordinal ?: -1
             val label = if (segIndex >= 0) segmentLabels[segIndex] else stat.segment
             canvas.drawText(label, cols[0], y, textPaint)
             canvas.drawText("%.1f".format(stat.avg), cols[1], y, textPaint)
@@ -90,7 +90,7 @@ object PdfExporter {
         val dateFmt = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault())
         records.forEach { record ->
             if (y > 800f) return@forEach // skip if exceeds page
-            val segIdx = try { MealSegment.valueOf(record.segment).ordinal } catch (_: Exception) { -1 }
+            val segIdx = MealSegment.safeValueOf(record.segment)?.ordinal ?: -1
             val segLabel = if (segIdx >= 0) segmentLabels[segIdx] else record.segment
             canvas.drawText(dateFmt.format(Date(record.timestamp)), rCols[0], y, textPaint)
             canvas.drawText(segLabel, rCols[1], y, textPaint)

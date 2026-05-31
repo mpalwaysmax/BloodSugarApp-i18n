@@ -17,7 +17,4 @@ interface MedicationDao {
 
     @Query("SELECT * FROM medications ORDER BY timestamp DESC LIMIT :limit")
     fun getAll(limit: Int = 100): Flow<List<Medication>>
-
-    @Query("SELECT * FROM medications WHERE id = :id")
-    suspend fun getById(id: Long): Medication?
 }

@@ -40,11 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "blood_sugar.db"
                 )
-                    .apply {
-                        if (ALL_MIGRATIONS.isNotEmpty()) {
-                            addMigrations(*ALL_MIGRATIONS)
-                        }
-                    }
+                    .addMigrations(*ALL_MIGRATIONS)
                     .build()
                     .also { INSTANCE = it }
             }

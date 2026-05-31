@@ -36,7 +36,7 @@ fun RecordSheet(
 
     var selectedSegment by remember { mutableStateOf(
         editingRecord?.let {
-            try { MealSegment.valueOf(it.segment) } catch (_: Exception) { viewModel.inferSegment() }
+            MealSegment.safeValueOf(it.segment) ?: viewModel.inferSegment()
         } ?: viewModel.inferSegment()
     )}
     var glucoseInput by remember { mutableStateOf(
