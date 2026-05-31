@@ -16,9 +16,12 @@ A lightweight, offline-first Android blood sugar recording app designed for elde
 ## Features
 
 - **Quick Recording** — 6 meal segments (before/after breakfast, lunch, dinner) with automatic time-based inference
+- **Medication Tracking** — Log medications with name, dosage, and notes; edit/delete with one tap
 - **Statistics Summary** — Collapsible card showing average, max, min glucose per meal segment
+- **Unit Toggle** — Switch between mmol/L and mg/dL with one tap (persists across restarts)
 - **PDF Export** — One-tap report generation with stats + full record table, share via Bluetooth, email, or print
-- **Trend Chart** — Canvas-drawn line chart with month/year toggle, horizontal scroll, and normal-range indicator
+- **Copy Summary** — One-tap clipboard copy for quick sharing via messaging apps
+- **Trend Chart** — Smooth bezier curves with gradient fill, month/year toggle, and normal-range indicator
 - **Time Grouping** — Records grouped by This Month / This Year / Earlier with collapsible headers
 - **Bilingual** — Chinese and English UI, follows system language automatically
 - **Accessibility** — Large fonts for elderly users, WCAG AA color contrast for glucose status indicators
@@ -27,9 +30,9 @@ A lightweight, offline-first Android blood sugar recording app designed for elde
 
 ## Screenshots
 
-| Main Screen | Record Dialog | Statistics | Trend Chart |
-|:-----------:|:------------:|:----------:|:-----------:|
-| ![Main](screenshots/main.png) | ![Record](screenshots/record.png) | ![Stats](screenshots/stats.png) | ![Trend](screenshots/trend.png) |
+| Main Screen | Record Dialog | Statistics | Trend Chart | Medications |
+|:-----------:|:------------:|:----------:|:-----------:|:-----------:|
+| ![Main](screenshots/main.png) | ![Record](screenshots/record.png) | ![Stats](screenshots/stats.png) | ![Trend](screenshots/trend.png) | ![Medication](screenshots/medication.png) |
 
 ## Tech Stack
 
@@ -52,17 +55,21 @@ app/src/main/java/com/bloodsugar/
 │   ├── AppDatabase.kt       # Room database with migration framework
 │   ├── Record.kt            # Entity: id, value, segment, note, timestamp
 │   ├── RecordDao.kt         # DAO: Flow queries + SQL aggregation
+│   ├── Medication.kt        # Entity: id, name, dosage, note, timestamp
+│   ├── MedicationDao.kt     # DAO: Flow queries for medications
 │   └── SegmentStats.kt      # Stats data class
 ├── ui/
 │   ├── MainScreen.kt        # Main UI: header + stats card + grouped list
 │   ├── MainViewModel.kt     # State management (MVVM)
 │   ├── RecordSheet.kt       # Record entry/edit dialog
-│   ├── ChartOverlay.kt      # Trend chart (Canvas-drawn)
+│   ├── MedicationSheet.kt   # Medication add/edit dialog
+│   ├── ChartOverlay.kt      # Trend chart (bezier curves + gradient)
 │   ├── StatsSummaryCard.kt  # Collapsible statistics card
 │   ├── PdfExporter.kt       # PDF report generation (zero dependencies)
 │   └── theme/               # Colors, typography, Material 3 theme
 └── util/
-    ├── GlucoseValidator.kt  # Input validation (1.0–33.3 mmol/L)
+    ├── GlucoseValidator.kt  # Input validation
+    ├── GlucoseUnit.kt       # mmol/L ↔ mg/dL conversion
     └── MealSegment.kt       # 6 meal segments + time-based inference
 ```
 
@@ -70,7 +77,7 @@ app/src/main/java/com/bloodsugar/
 - **Jetpack Compose** — 100% declarative UI
 - **Material 3** — Design system with light/dark theme
 - **StateFlow** — Reactive state management
-- **Unit Tests** — 15 tests covering glucose validation and meal segment logic
+- **Unit Tests** — 22 tests covering validation, unit conversion, and meal segments
 
 ## Building
 
