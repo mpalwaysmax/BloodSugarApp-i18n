@@ -15,8 +15,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
@@ -38,7 +40,6 @@ fun ChartOverlay(
     records: List<Record>,
     onDismiss: () -> Unit
 ) {
-    // Time range: This Month / This Year
     var selectedRange by remember { mutableStateOf("month") }
 
     val filteredRecords = remember(records, selectedRange) {
@@ -59,7 +60,7 @@ fun ChartOverlay(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
-            ) { /* Intercept clicks to prevent pass-through */ }
+            ) { }
     ) {
         Column(
             modifier = Modifier
@@ -89,9 +90,7 @@ fun ChartOverlay(
             Spacer(modifier = Modifier.height(8.dp))
 
             // Month/Year filter chips
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 FilterChip(
                     selected = selectedRange == "month",
                     onClick = { selectedRange = "month" },
@@ -201,7 +200,6 @@ fun ChartOverlay(
 
                         // Horizontally scrollable chart + X-axis labels
                         Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
-                            // Canvas chart area (no X-axis labels)
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
@@ -217,7 +215,6 @@ fun ChartOverlay(
                                 )
                             }
 
-                            // X-axis time labels (independent area, shared scrollState)
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -233,7 +230,6 @@ fun ChartOverlay(
                                 )
                             }
 
-                            // Scroll-to-latest button
                             if (chartWidth > minChartWidth) {
                                 Box(
                                     modifier = Modifier.fillMaxWidth(),
@@ -324,8 +320,9 @@ fun BloodSugarChart(
     records: List<Record>,
     modifier: Modifier = Modifier
 ) {
-    val normalColor = GlucoseNormal.copy(alpha = 0.12f)
-    val normalBorder = GlucoseNormal.copy(alpha = 0.25f)
+    val normalBandTop = GlucoseNormal.copy(alpha = 0.10f)
+    val normalBandBottom = GlucoseNormal.copy(alpha = 0.02f)
+    val normalBorder = GlucoseNormal.copy(alpha = 0.30f)
     val lineColor = Primary
     val screenDensity = LocalDensity.current.density
 
@@ -336,29 +333,40 @@ fun BloodSugarChart(
         val maxY = 16.0f
         val rangeY = maxY - minY
         val leftPadding = 8f * screenDensity
+        val bottomPadding = 16f * screenDensity
 
-        // Normal range background band (4.4 - 7.8)
+        // Normal range background band (4.4 - 7.8) with gradient
         val normalTop = height * (1 - (7.8f - minY) / rangeY)
         val normalBottom = height * (1 - (4.4f - minY) / rangeY)
         drawRect(
-            color = normalColor,
+            brush = Brush.verticalGradient(
+                colors = listOf(normalBandTop, normalBandBottom),
+                startY = normalTop,
+                endY = normalBottom
+            ),
             topLeft = Offset(leftPadding, normalTop),
             size = androidx.compose.ui.geometry.Size(width - leftPadding, normalBottom - normalTop)
         )
-        drawLine(normalBorder, Offset(leftPadding, normalTop), Offset(width, normalTop), strokeWidth = 1.5f)
-        drawLine(normalBorder, Offset(leftPadding, normalBottom), Offset(width, normalBottom), strokeWidth = 1.5f)
+        // Dashed borders for normal range
+        val dashEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 6f), 0f)
+        drawLine(
+            normalBorder, Offset(leftPadding, normalTop), Offset(width, normalTop),
+            strokeWidth = 1.5f, pathEffect = dashEffect
+        )
+        drawLine(
+            normalBorder, Offset(leftPadding, normalBottom), Offset(width, normalBottom),
+            strokeWidth = 1.5f, pathEffect = dashEffect
+        )
 
-        val axisTextSize = 11f * screenDensity
-
-        // Y-axis grid lines
+        // Y-axis grid lines (subtle)
         val ySteps = listOf(3f, 6f, 9f, 12f, 15f)
         ySteps.forEach { value ->
             val y = height * (1 - (value - minY) / rangeY)
             drawLine(
-                Color.LightGray.copy(alpha = 0.25f),
+                Color.LightGray.copy(alpha = 0.15f),
                 Offset(leftPadding, y),
                 Offset(width, y),
-                strokeWidth = 1f
+                strokeWidth = 0.8f
             )
         }
 
@@ -367,38 +375,66 @@ fun BloodSugarChart(
         val usableWidth = width - leftPadding
         val stepX = if (count > 1) usableWidth / (count - 1) else usableWidth
 
-        // Line chart + data points
         if (records.isNotEmpty()) {
-            val path = Path()
-            records.forEachIndexed { index, record ->
+            // Build points list
+            data class Point(val x: Float, val y: Float)
+            val points = records.mapIndexed { index, record ->
                 val x = leftPadding + if (count > 1) index * stepX else usableWidth / 2
-                val y = height * (1 - (record.value.coerceIn(minY, maxY) - minY) / rangeY)
+                val y = (height - bottomPadding) * (1 - (record.value.coerceIn(minY, maxY) - minY) / rangeY)
+                Point(x, y)
+            }
 
-                if (index == 0) {
-                    path.moveTo(x, y)
-                } else {
-                    path.lineTo(x, y)
+            // Build smooth cubic bezier path
+            val linePath = Path().apply {
+                moveTo(points.first().x, points.first().y)
+                for (i in 1 until points.size) {
+                    val prev = points[i - 1]
+                    val curr = points[i]
+                    val tension = 0.3f
+                    val dx = (curr.x - prev.x) * tension
+                    cubicTo(
+                        prev.x + dx, prev.y,
+                        curr.x - dx, curr.y,
+                        curr.x, curr.y
+                    )
                 }
             }
 
-            // Draw line first (unified color)
+            // Gradient fill under the line
+            val fillPath = Path().apply {
+                addPath(linePath)
+                lineTo(points.last().x, height - bottomPadding)
+                lineTo(points.first().x, height - bottomPadding)
+                close()
+            }
             drawPath(
-                path = path,
-                color = lineColor.copy(alpha = 0.7f),
+                path = fillPath,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Primary.copy(alpha = 0.15f),
+                        Primary.copy(alpha = 0.02f)
+                    ),
+                    startY = points.minOf { it.y },
+                    endY = height - bottomPadding
+                )
+            )
+
+            // Draw smooth line
+            drawPath(
+                path = linePath,
+                color = lineColor.copy(alpha = 0.8f),
                 style = Stroke(width = 2.5f * screenDensity, cap = StrokeCap.Round)
             )
 
-            // Draw data points (colored by status + white border + value label)
+            // Draw data points with shadow effect
             val valuePaint = android.graphics.Paint().apply {
                 color = android.graphics.Color.DKGRAY
                 textSize = 12f * screenDensity
                 isAntiAlias = true
                 textAlign = android.graphics.Paint.Align.CENTER
             }
-            records.forEachIndexed { index, record ->
-                val x = leftPadding + if (count > 1) index * stepX else usableWidth / 2
-                val y = height * (1 - (record.value.coerceIn(minY, maxY) - minY) / rangeY)
-
+            points.forEachIndexed { index, point ->
+                val record = records[index]
                 val pointColor = when {
                     record.value < 4.4f -> GlucoseLow
                     record.value <= 7.8f -> GlucoseNormal
@@ -408,20 +444,26 @@ fun BloodSugarChart(
                 // Value label above data point
                 val valueLabel = "%.1f".format(record.value)
                 drawContext.canvas.nativeCanvas.drawText(
-                    valueLabel, x, y - 12f * screenDensity, valuePaint
+                    valueLabel, point.x, point.y - 14f * screenDensity, valuePaint
                 )
 
+                // Outer glow
+                drawCircle(
+                    color = pointColor.copy(alpha = 0.2f),
+                    radius = 10f * screenDensity,
+                    center = Offset(point.x, point.y)
+                )
                 // White border
                 drawCircle(
                     color = Color.White,
                     radius = 7f * screenDensity,
-                    center = Offset(x, y)
+                    center = Offset(point.x, point.y)
                 )
                 // Colored dot
                 drawCircle(
                     color = pointColor,
                     radius = 5f * screenDensity,
-                    center = Offset(x, y)
+                    center = Offset(point.x, point.y)
                 )
             }
         }
