@@ -32,6 +32,14 @@ export JAVA_HOME="/path/to/jdk-11"
 - **Touch targets** ≥ 48dp for accessibility
 - **Colors** use `MaterialTheme.colorScheme` — glucose status colors use `GlucoseNormal`/`GlucoseHigh`/`GlucoseLow`
 
+## Workflow Best Practices
+
+1. **Build before commit** — `./gradlew assembleDebug` must pass before any commit
+2. **Test before push** — `./gradlew testDebugUnitTest` must pass
+3. **Screenshots** — use `uiautomator dump` to find element coordinates, never hardcode tap positions
+4. **New features** — design the interaction flow first (wireframe or description), then implement
+5. **Commit messages** — use conventional commits: `feat:`, `fix:`, `docs:`, `test:`, `chore:`
+
 ## Adding a New Language
 
 1. Create `app/src/main/res/values-<locale>/strings.xml`
