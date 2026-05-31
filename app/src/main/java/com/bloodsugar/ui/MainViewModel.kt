@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.bloodsugar.R
 import com.bloodsugar.data.AppDatabase
+import com.bloodsugar.data.Medication
 import com.bloodsugar.data.Record
 import com.bloodsugar.data.SegmentStats
 import com.bloodsugar.util.GlucoseUnit
@@ -17,6 +18,7 @@ import java.time.*
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = AppDatabase.getInstance(application).recordDao()
+    private val medDao = AppDatabase.getInstance(application).medicationDao()
     private val appContext = application.applicationContext
     private val prefs = application.getSharedPreferences("blood_sugar_prefs", 0)
 
@@ -56,6 +58,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // Stats by segment
     val statsBySegment: StateFlow<List<SegmentStats>> = dao.getStatsBySegment()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Medications
+    val medications: StateFlow<List<Medication>> = medDao.getAll()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _showMedSheet = MutableStateFlow(false)
+    val showMedSheet: StateFlow<Boolean> = _showMedSheet
+
+    private val _editingMed = MutableStateFlow<Medication?>(null)
+    val editingMed: StateFlow<Medication?> = _editingMed
 
     // Date range picker dialog
     private val _showDateRangeDialog = MutableStateFlow(false)
@@ -181,5 +193,42 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         sb.appendLine("─".repeat(20))
         sb.appendLine("Total: ${records.value.size} records")
         return sb.toString()
+    }
+
+    // Medication methods
+    fun openMedSheet() {
+        _editingMed.value = null
+        _showMedSheet.value = true
+    }
+
+    fun openEditMedSheet(medication: Medication) {
+        _editingMed.value = medication
+        _showMedSheet.value = true
+    }
+
+    fun closeMedSheet() {
+        _showMedSheet.value = false
+        _editingMed.value = null
+    }
+
+    fun saveMedication(name: String, dosage: String, note: String) {
+        viewModelScope.launch {
+            val editing = _editingMed.value
+            if (editing != null) {
+                medDao.update(editing.copy(name = name, dosage = dosage, note = note))
+                _lastSavedEvent.value = appContext.getString(R.string.med_saved)
+            } else {
+                medDao.insert(Medication(name = name, dosage = dosage, note = note))
+                _lastSavedEvent.value = appContext.getString(R.string.med_saved)
+            }
+            closeMedSheet()
+        }
+    }
+
+    fun deleteMedication(medication: Medication) {
+        viewModelScope.launch {
+            medDao.delete(medication)
+            _lastSavedEvent.value = appContext.getString(R.string.med_deleted)
+        }
     }
 }

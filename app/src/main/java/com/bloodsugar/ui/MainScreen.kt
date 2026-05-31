@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bloodsugar.R
+import com.bloodsugar.data.Medication
 import com.bloodsugar.data.Record
 import com.bloodsugar.ui.theme.*
 import com.bloodsugar.util.GlucoseUnit
@@ -51,6 +52,9 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val deleteConfirmRecord by viewModel.deleteConfirmRecord.collectAsState()
     val sortNewestFirst by viewModel.sortNewestFirst.collectAsState()
     val glucoseUnit by viewModel.glucoseUnit.collectAsState()
+    val medications by viewModel.medications.collectAsState()
+    val showMedSheet by viewModel.showMedSheet.collectAsState()
+    val editingMed by viewModel.editingMed.collectAsState()
     val statsBySegment by viewModel.statsBySegment.collectAsState()
     val showDateRangeDialog by viewModel.showDateRangeDialog.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -185,6 +189,12 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(stringResource(R.string.btn_trend), style = GlucoseTypography.bodyLarge)
                         }
+                        TextButton(
+                            onClick = { viewModel.openMedSheet() },
+                            modifier = Modifier.height(48.dp)
+                        ) {
+                            Text(stringResource(R.string.med_title), style = GlucoseTypography.bodyLarge)
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -276,6 +286,67 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                             }
                         }
                     }
+
+                    // Medications section
+                    if (medications.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            stringResource(R.string.med_title),
+                            style = GlucoseTypography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        medications.forEach { med ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                                onClick = { viewModel.openEditMedSheet(med) }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            med.name,
+                                            style = GlucoseTypography.bodyLarge,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Text(
+                                            med.dosage,
+                                            style = GlucoseTypography.caption,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        if (med.note.isNotBlank()) {
+                                            Text(
+                                                med.note,
+                                                style = GlucoseTypography.caption,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                    IconButton(
+                                        onClick = { viewModel.deleteMedication(med) },
+                                        modifier = Modifier.size(40.dp)
+                                    ) {
+                                        Icon(
+                                            Icons.Default.Delete,
+                                            contentDescription = stringResource(R.string.med_delete_cd),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -325,6 +396,15 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                             Text(stringResource(R.string.btn_cancel), style = GlucoseTypography.bodyLarge)
                         }
                     }
+                )
+            }
+
+            // Medication sheet
+            if (showMedSheet) {
+                MedicationSheet(
+                    editingMed = editingMed,
+                    onDismiss = { viewModel.closeMedSheet() },
+                    onSave = { name, dosage, note -> viewModel.saveMedication(name, dosage, note) }
                 )
             }
 

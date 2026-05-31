@@ -73,6 +73,17 @@
     <string name="unit_mgdl">mg/dL</string>
     <string name="unit_toggle_cd">切换血糖单位</string>
 
+    <!-- Medication -->
+    <string name="med_title">药物记录</string>
+    <string name="med_add">添加药物</string>
+    <string name="med_name">药物名称</string>
+    <string name="med_dosage">剂量</string>
+    <string name="med_note">备注（可选）</string>
+    <string name="med_empty">还没有药物记录</string>
+    <string name="med_saved">药物已保存</string>
+    <string name="med_deleted">药物已删除</string>
+    <string name="med_delete_cd">删除药物</string>
+
     <!-- Stats Summary -->
     <string name="stats_title">统计摘要</string>
     <string name="stats_avg">平均</string>
