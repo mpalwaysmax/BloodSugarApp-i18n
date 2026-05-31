@@ -21,9 +21,9 @@
 
 ## 截图
 
-| 主界面 | 记录弹窗 | 统计摘要 | PDF 导出 |
+| 主界面 | 记录弹窗 | 统计摘要 | 趋势图 |
 |:------:|:--------:|:--------:|:--------:|
-| *即将添加* | *即将添加* | *即将添加* | *即将添加* |
+| ![主界面](screenshots/main.png) | ![记录弹窗](screenshots/record.png) | ![统计摘要](screenshots/stats.png) | ![趋势图](screenshots/trend.png) |
 
 ## 技术栈
 

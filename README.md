@@ -1,5 +1,11 @@
 # BloodSugar Tracker
 
+[![Android CI](https://github.com/mpalwaysmax/BloodSugarApp-i18n/actions/workflows/android-ci.yml/badge.svg)](https://github.com/mpalwaysmax/BloodSugarApp-i18n/actions/workflows/android-ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/mpalwaysmax/BloodSugarApp-i18n)](https://github.com/mpalwaysmax/BloodSugarApp-i18n/releases)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.8-blue.svg)](https://kotlinlang.org)
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-purple.svg)](https://developer.android.com/jetpack/compose)
+
 [中文版](README_zh.md)
 
 > My grandmother has diabetes and used to track her blood sugar in a handwritten notebook. As the pages piled up, finding old records became impossible — every doctor's visit meant flipping through stacks of paper. I built this app to make tracking effortless and sharing with doctors instant.
@@ -20,9 +26,9 @@ A lightweight, offline-first Android blood sugar recording app designed for elde
 
 ## Screenshots
 
-| Main Screen | Record Dialog | Statistics | PDF Export |
-|:-----------:|:------------:|:----------:|:----------:|
-| *Coming soon* | *Coming soon* | *Coming soon* | *Coming soon* |
+| Main Screen | Record Dialog | Statistics | Trend Chart |
+|:-----------:|:------------:|:----------:|:-----------:|
+| ![Main](screenshots/main.png) | ![Record](screenshots/record.png) | ![Stats](screenshots/stats.png) | ![Trend](screenshots/trend.png) |
 
 ## Tech Stack
 
