@@ -148,4 +148,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun getRecordsForExport(startTime: Long, endTime: Long): Flow<List<Record>> {
         return dao.getByDateRange(startTime, endTime)
     }
+
+    fun buildSummaryText(): String {
+        val stats = statsBySegment.value
+        if (stats.isEmpty()) return appContext.getString(R.string.empty_title)
+
+        val sb = StringBuilder()
+        sb.appendLine(appContext.getString(R.string.pdf_title))
+        sb.appendLine("─".repeat(20))
+        stats.forEach { stat ->
+            val labelResId = try {
+                MealSegment.valueOf(stat.segment).labelResId
+            } catch (_: Exception) { R.string.stats_title }
+            sb.appendLine("${appContext.getString(labelResId)}: avg %.1f | max %.1f | min %.1f | %d${appContext.getString(R.string.stats_count_format).replace("%1\$d", "")}".format(
+                stat.avg, stat.max, stat.min, stat.count
+            ))
+        }
+        sb.appendLine("─".repeat(20))
+        sb.appendLine("Total: ${records.value.size} records")
+        return sb.toString()
+    }
 }

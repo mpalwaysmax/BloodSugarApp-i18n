@@ -122,11 +122,18 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
 
                     Spacer(modifier = Modifier.height(20.dp))
 
+                    val clipboardContext = LocalContext.current
+
                     // Stats Summary Card
                     if (statsBySegment.isNotEmpty()) {
                         StatsSummaryCard(
                             stats = statsBySegment,
-                            onExportClick = { viewModel.showDateRangePicker() }
+                            onExportClick = { viewModel.showDateRangePicker() },
+                            onCopyClick = {
+                                val clipboard = clipboardContext.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                                val clip = android.content.ClipData.newPlainText("Blood Sugar Summary", viewModel.buildSummaryText())
+                                clipboard.setPrimaryClip(clip)
+                            }
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Share
@@ -24,7 +25,8 @@ import com.bloodsugar.util.MealSegment
 @Composable
 fun StatsSummaryCard(
     stats: List<SegmentStats>,
-    onExportClick: () -> Unit
+    onExportClick: () -> Unit,
+    onCopyClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -49,6 +51,17 @@ fun StatsSummaryCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = onCopyClick,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.ContentCopy,
+                            contentDescription = "Copy summary",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                     IconButton(
                         onClick = onExportClick,
                         modifier = Modifier.size(40.dp)
