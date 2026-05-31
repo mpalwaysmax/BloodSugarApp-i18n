@@ -34,3 +34,4 @@ Thumbs.db
 # Project internals
 .omc/
 docs/
+*.xml
