@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">血糖管家</string>
+
+    <!-- MainScreen -->
+    <string name="title_main">血糖管家</string>
+    <string name="btn_record">记录血糖</string>
+    <string name="btn_record_cd">记录血糖</string>
+    <string name="sort_newest">最新</string>
+    <string name="sort_oldest">最旧</string>
+    <string name="sort_cd_newest">按最新排序</string>
+    <string name="sort_cd_oldest">按最旧排序</string>
+    <string name="btn_trend">趋势图</string>
+    <string name="btn_trend_cd">查看趋势图</string>
+    <string name="group_this_month">本月</string>
+    <string name="group_this_year">今年</string>
+    <string name="group_earlier">更早</string>
+    <string name="group_count_format">%1$s (%2$d条)</string>
+    <string name="cd_collapse">收起</string>
+    <string name="cd_expand">展开</string>
+    <string name="dialog_delete_title">确认删除</string>
+    <string name="dialog_delete_text">确定删除这条记录？</string>
+    <string name="btn_delete">删除</string>
+    <string name="btn_cancel">取消</string>
+    <string name="empty_title">还没有记录哦</string>
+    <string name="empty_subtitle">点击上方按钮开始记录</string>
+    <string name="cd_delete_record">删除记录</string>
+
+    <!-- RecordSheet -->
+    <string name="sheet_title_edit">编辑记录</string>
+    <string name="sheet_title_new">记录血糖</string>
+    <string name="cd_close">关闭</string>
+    <string name="label_select_segment">选择餐段</string>
+    <string name="label_glucose_value">血糖值 (mmol/L)</string>
+    <string name="label_notes">备注（可选）</string>
+    <string name="cd_collapse_notes">收起备注</string>
+    <string name="cd_expand_notes">展开备注</string>
+    <string name="placeholder_notes">例如：吃了什么药、感觉如何</string>
+    <string name="btn_save_edit">保存修改</string>
+    <string name="btn_save_new">确认保存</string>
+
+    <!-- ChartOverlay -->
+    <string name="chart_title">血糖趋势</string>
+    <string name="chart_filter_month">本月</string>
+    <string name="chart_filter_year">今年</string>
+    <string name="legend_normal">正常</string>
+    <string name="legend_high">偏高</string>
+    <string name="legend_low">偏低</string>
+    <string name="chart_no_data">需要至少2条记录才能显示趋势图</string>
+    <string name="chart_scroll_latest">→ 最新</string>
+
+    <!-- MealSegment -->
+    <string name="segment_before_breakfast">早餐前</string>
+    <string name="segment_after_breakfast">早餐后</string>
+    <string name="segment_before_lunch">午餐前</string>
+    <string name="segment_after_lunch">午餐后</string>
+    <string name="segment_before_dinner">晚餐前</string>
+    <string name="segment_after_dinner">晚餐后</string>
+
+    <!-- GlucoseValidator -->
+    <string name="error_invalid_number">请输入有效的数字</string>
+    <string name="error_below_min">血糖值不能低于 %1$.1f mmol/L</string>
+    <string name="error_above_max">血糖值不能高于 %1$.1f mmol/L</string>
+
+    <!-- Snackbar messages -->
+    <string name="snack_deleted">记录已删除</string>
+    <string name="snack_delete_failed">删除失败，请重试</string>
+    <string name="snack_updated">记录已更新</string>
+    <string name="snack_saved">记录已保存</string>
+
+    <!-- Stats Summary -->
+    <string name="stats_title">统计摘要</string>
+    <string name="stats_avg">平均</string>
+    <string name="stats_max">最高</string>
+    <string name="stats_min">最低</string>
+    <string name="stats_count_format">%1$d条</string>
+    <string name="stats_count_format_one">1条</string>
+
+    <!-- PDF Export -->
+    <string name="export_pdf">导出报告</string>
+    <string name="export_range_title">选择日期范围</string>
+    <string name="export_range_month">本月</string>
+    <string name="export_range_3months">近3个月</string>
+    <string name="export_range_all">全部</string>
+    <string name="pdf_title">血糖报告</string>
+    <string name="pdf_generated">生成日期</string>
+</resources>

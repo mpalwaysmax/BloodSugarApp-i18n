@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BloodSugar</string>
+
+    <!-- MainScreen -->
+    <string name="title_main">Blood Sugar</string>
+    <string name="btn_record">Record Blood Sugar</string>
+    <string name="btn_record_cd">Record Blood Sugar</string>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_oldest">Oldest</string>
+    <string name="sort_cd_newest">Sort by newest</string>
+    <string name="sort_cd_oldest">Sort by oldest</string>
+    <string name="btn_trend">Trend</string>
+    <string name="btn_trend_cd">View trend chart</string>
+    <string name="group_this_month">This Month</string>
+    <string name="group_this_year">This Year</string>
+    <string name="group_earlier">Earlier</string>
+    <string name="group_count_format">%1$s (%2$d)</string>
+    <string name="cd_collapse">Collapse</string>
+    <string name="cd_expand">Expand</string>
+    <string name="dialog_delete_title">Confirm Delete</string>
+    <string name="dialog_delete_text">Are you sure you want to delete this record?</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="empty_title">No records yet</string>
+    <string name="empty_subtitle">Tap the button above to start recording</string>
+    <string name="cd_delete_record">Delete record</string>
+
+    <!-- RecordSheet -->
+    <string name="sheet_title_edit">Edit Record</string>
+    <string name="sheet_title_new">Record Blood Sugar</string>
+    <string name="cd_close">Close</string>
+    <string name="label_select_segment">Select Meal Segment</string>
+    <string name="label_glucose_value">Blood Sugar (mmol/L)</string>
+    <string name="label_notes">Notes (optional)</string>
+    <string name="cd_collapse_notes">Collapse notes</string>
+    <string name="cd_expand_notes">Expand notes</string>
+    <string name="placeholder_notes">e.g., medication taken, how you feel</string>
+    <string name="btn_save_edit">Save Changes</string>
+    <string name="btn_save_new">Confirm Save</string>
+
+    <!-- ChartOverlay -->
+    <string name="chart_title">Blood Sugar Trend</string>
+    <string name="chart_filter_month">This Month</string>
+    <string name="chart_filter_year">This Year</string>
+    <string name="legend_normal">Normal</string>
+    <string name="legend_high">High</string>
+    <string name="legend_low">Low</string>
+    <string name="chart_no_data">Need at least 2 records to show trend chart</string>
+    <string name="chart_scroll_latest">→ Latest</string>
+
+    <!-- MealSegment -->
+    <string name="segment_before_breakfast">Pre-Breakfast</string>
+    <string name="segment_after_breakfast">Post-Breakfast</string>
+    <string name="segment_before_lunch">Pre-Lunch</string>
+    <string name="segment_after_lunch">Post-Lunch</string>
+    <string name="segment_before_dinner">Pre-Dinner</string>
+    <string name="segment_after_dinner">Post-Dinner</string>
+
+    <!-- GlucoseValidator -->
+    <string name="error_invalid_number">Please enter a valid number</string>
+    <string name="error_below_min">Blood sugar cannot be below %1$.1f mmol/L</string>
+    <string name="error_above_max">Blood sugar cannot be above %1$.1f mmol/L</string>
+
+    <!-- Snackbar messages -->
+    <string name="snack_deleted">Record deleted</string>
+    <string name="snack_delete_failed">Delete failed, please retry</string>
+    <string name="snack_updated">Record updated</string>
+    <string name="snack_saved">Record saved</string>
+
+    <!-- Stats Summary -->
+    <string name="stats_title">Statistics Summary</string>
+    <string name="stats_avg">Avg</string>
+    <string name="stats_max">Max</string>
+    <string name="stats_min">Min</string>
+    <string name="stats_count_format">%1$d records</string>
+    <string name="stats_count_format_one">1 record</string>
+
+    <!-- PDF Export -->
+    <string name="export_pdf">Export Report</string>
+    <string name="export_range_title">Select Date Range</string>
+    <string name="export_range_month">This Month</string>
+    <string name="export_range_3months">Last 3 Months</string>
+    <string name="export_range_all">All</string>
+    <string name="pdf_title">Blood Sugar Report</string>
+    <string name="pdf_generated">Generated</string>
+</resources>

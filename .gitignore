@@ -1,0 +1,37 @@
+# Built outputs
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# APK output
+app/build/
+
+# Gradle wrapper
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio
+*.hprof
+*.jks
+*.keystore
+
+# Kotlin
+*.class
+
+# Log files
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project internals
+.omc/
+docs/
+CLAUDE.md
