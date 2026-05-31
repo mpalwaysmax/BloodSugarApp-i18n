@@ -15,6 +15,8 @@ This project was developed with AI assistance (Claude by Anthropic).
 - Glucose values validated by `GlucoseValidator` (1.0–33.3 mmol/L)
 - Meal segments auto-inferred from time of day via `MealSegment.inferSegment()`
 - Database migrations use `ALL_MIGRATIONS` list — never `fallbackToDestructiveMigration()`
+- HbA1c estimated via Nathan formula in `HbA1cEstimator`
+- Medications stored in separate Room table with `MedicationDao`
 
 ## Building
 

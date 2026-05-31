@@ -7,11 +7,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Blood sugar recording with 6 meal segments (before/after breakfast, lunch, dinner)
 - Automatic meal segment inference based on time of day
-- Statistics summary card (average, max, min per meal segment, collapsible)
+- Statistics summary card with HbA1c estimate and % in range (collapsible)
+- Medication tracking (CRUD with name, dosage, note, timestamp)
 - One-tap PDF report generation with system share (Bluetooth, email, print)
 - Copy summary to clipboard for quick sharing via messaging apps
 - mmol/L ↔ mg/dL unit toggle (persists across restarts)
-- Trend chart with month/year toggle, horizontal scroll, and normal-range indicator
+- Trend chart with smooth bezier curves, gradient fill, month/year toggle
 - Time-based grouping (This Month / This Year / Earlier) with collapsible headers
 - Sort by newest / oldest
 - Delete with confirmation dialog
@@ -19,7 +20,7 @@ All notable changes to this project will be documented in this file.
 - Large fonts and high-contrast colors for elderly accessibility (WCAG AA)
 - Color-coded glucose values: low (red), normal (green), high (orange)
 - Input validation (1.0–33.3 mmol/L)
-- Room database with migration framework (data preserved across updates)
+- Room database with migration framework (v1→v2, data preserved across updates)
 - FileProvider for secure PDF sharing
 - Zero third-party dependencies
 - 22 unit tests (GlucoseValidator + MealSegment + GlucoseUnit)
@@ -29,7 +30,8 @@ All notable changes to this project will be documented in this file.
 ### Technical
 - Kotlin + Jetpack Compose + Material 3
 - MVVM architecture (ViewModel → DAO direct)
-- Canvas-drawn trend chart (no charting library)
+- Canvas-drawn trend chart with bezier interpolation
 - Native PdfDocument API (no PDF library)
 - StateFlow for reactive state management
 - JUnit 4 unit tests
+- Nathan formula for HbA1c estimation
