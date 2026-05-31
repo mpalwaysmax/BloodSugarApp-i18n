@@ -10,6 +10,7 @@ import com.bloodsugar.data.Record
 import com.bloodsugar.data.SegmentStats
 import com.bloodsugar.util.GlucoseUnit
 import com.bloodsugar.util.GlucoseValidator
+import com.bloodsugar.util.HbA1cEstimator
 import com.bloodsugar.util.MealSegment
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -58,6 +59,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // Stats by segment
     val statsBySegment: StateFlow<List<SegmentStats>> = dao.getStatsBySegment()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // HbA1c estimate (computed from records)
+    val hba1cEstimate: StateFlow<Float?> = records.map { list ->
+        HbA1cEstimator.estimate(list)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    val percentInRange: StateFlow<Float?> = records.map { list ->
+        HbA1cEstimator.percentInRange(list)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     // Medications
     val medications: StateFlow<List<Medication>> = medDao.getAll()

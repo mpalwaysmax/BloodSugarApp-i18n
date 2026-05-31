@@ -56,6 +56,8 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val showMedSheet by viewModel.showMedSheet.collectAsState()
     val editingMed by viewModel.editingMed.collectAsState()
     val deleteConfirmMed by viewModel.deleteConfirmMed.collectAsState()
+    val hba1cEstimate by viewModel.hba1cEstimate.collectAsState()
+    val percentInRange by viewModel.percentInRange.collectAsState()
     val statsBySegment by viewModel.statsBySegment.collectAsState()
     val showDateRangeDialog by viewModel.showDateRangeDialog.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -140,7 +142,9 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                                 val clipboard = clipboardContext.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
                                 val clip = android.content.ClipData.newPlainText("Blood Sugar Summary", viewModel.buildSummaryText())
                                 clipboard.setPrimaryClip(clip)
-                            }
+                            },
+                            hba1c = hba1cEstimate,
+                            percentInRange = percentInRange
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }

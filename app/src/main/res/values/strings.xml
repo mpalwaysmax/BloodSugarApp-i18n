@@ -94,6 +94,9 @@
     <string name="stats_count_format">%1$d条</string>
     <string name="stats_count_format_one">1条</string>
 
+    <!-- HbA1c -->
+    <string name="stats_in_range">达标率</string>
+
     <!-- PDF Export -->
     <string name="export_pdf">导出报告</string>
     <string name="export_range_title">选择日期范围</string>

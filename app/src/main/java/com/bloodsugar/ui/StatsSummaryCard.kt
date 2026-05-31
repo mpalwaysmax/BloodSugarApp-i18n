@@ -26,7 +26,9 @@ import com.bloodsugar.util.MealSegment
 fun StatsSummaryCard(
     stats: List<SegmentStats>,
     onExportClick: () -> Unit,
-    onCopyClick: () -> Unit
+    onCopyClick: () -> Unit,
+    hba1c: Float? = null,
+    percentInRange: Float? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -152,6 +154,50 @@ fun StatsSummaryCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 2.dp)
                         )
+                    }
+
+                    // HbA1c and % in range summary
+                    if (hba1c != null || percentInRange != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Divider(color = MaterialTheme.colorScheme.outlineVariant)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            if (hba1c != null) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        "HbA1c",
+                                        style = GlucoseTypography.caption,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        "%.1f%%".format(hba1c),
+                                        style = GlucoseTypography.titleMedium,
+                                        color = when {
+                                            hba1c < 5.7f -> GlucoseNormal
+                                            hba1c < 6.5f -> GlucoseHigh
+                                            else -> GlucoseLow
+                                        }
+                                    )
+                                }
+                            }
+                            if (percentInRange != null) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        stringResource(R.string.stats_in_range),
+                                        style = GlucoseTypography.caption,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        "%.0f%%".format(percentInRange),
+                                        style = GlucoseTypography.titleMedium,
+                                        color = if (percentInRange >= 70f) GlucoseNormal else GlucoseHigh
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
