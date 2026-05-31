@@ -1,25 +1,28 @@
-# BloodSugar — 血糖管家
+# BloodSugar Tracker
 
-> 奶奶有糖尿病，每天在手抄本上记录血糖值，但本子越来越厚，找某天的记录很困难，每次看诊都要翻半天。我帮她做了这个血糖管家 app，记录更方便，还能一键生成 PDF 报告给医生看。
+[中文版](README_zh.md)
 
-一个轻量级 Android 血糖记录应用，专为老年人设计。Kotlin + Jetpack Compose + Material 3。
+> My grandmother has diabetes and used to track her blood sugar in a handwritten notebook. As the pages piled up, finding old records became impossible — every doctor's visit meant flipping through stacks of paper. I built this app to make tracking effortless and sharing with doctors instant.
 
-## 功能
+A lightweight, offline-first Android blood sugar recording app designed for elderly users. Built with Kotlin, Jetpack Compose, and Material 3.
 
-- **快速记录**：6 个餐段（早餐前/后、午餐前/后、晚餐前/后），时间自动推断
-- **统计摘要**：按餐段分组显示平均值、最高、最低、记录数
-- **PDF 导出**：一键生成血糖报告，支持微信/蓝牙/打印分享给医生
-- **趋势图**：Canvas 自绘折线图，支持月/年切换，横向滚动
-- **时间分组**：本月 / 今年 / 更早，可折叠，空分组隐藏
-- **排序**：最新优先 / 最旧优先切换
-- **中英双语**：跟随系统语言自动切换
-- **颜色编码**：偏低红、正常绿、偏高橙，WCAG AA 无障碍标准
-- **数据安全**：Room 数据库 + Migration 框架，覆盖安装不丢数据
-- **隐私**：完全离线，不收集任何数据
+## Features
+
+- **Quick Recording** — 6 meal segments (before/after breakfast, lunch, dinner) with automatic time-based inference
+- **Statistics Summary** — Collapsible card showing average, max, min glucose per meal segment
+- **PDF Export** — One-tap report generation with stats + full record table, share via Bluetooth, email, or print
+- **Trend Chart** — Canvas-drawn line chart with month/year toggle, horizontal scroll, and normal-range indicator
+- **Time Grouping** — Records grouped by This Month / This Year / Earlier with collapsible headers
+- **Bilingual** — Chinese and English UI, follows system language automatically
+- **Accessibility** — Large fonts for elderly users, WCAG AA color contrast for glucose status indicators
+- **Data Safety** — Room database with migration framework — APK updates never delete your data
+- **Privacy** — Fully offline. Zero data collection. All records stay on your device.
 
 ## Screenshots
 
-*Coming soon*
+| Main Screen | Record Dialog | Statistics | PDF Export |
+|:-----------:|:------------:|:----------:|:----------:|
+| *Coming soon* | *Coming soon* | *Coming soon* | *Coming soon* |
 
 ## Tech Stack
 
@@ -31,13 +34,35 @@
 | Compose BOM | 2023.06.01 | |
 | Room | 2.5.2 | Using kapt |
 
+**Zero third-party dependencies** — PDF generation uses Android's native `PdfDocument` API. Charts are drawn with Compose `Canvas`. No charting libraries, no PDF libraries.
+
 ## Architecture
 
-- **MVVM** without Repository layer (ViewModel → DAO direct)
-- **Jetpack Compose** for all UI
-- **Material 3** design system
-- **Room** for local database
-- **StateFlow** for reactive state management
+```
+app/src/main/java/com/bloodsugar/
+├── MainActivity.kt          # Entry point
+├── data/
+│   ├── AppDatabase.kt       # Room database with migration framework
+│   ├── Record.kt            # Entity: id, value, segment, note, timestamp
+│   ├── RecordDao.kt         # DAO: Flow queries + SQL aggregation
+│   └── SegmentStats.kt      # Stats data class
+├── ui/
+│   ├── MainScreen.kt        # Main UI: header + stats card + grouped list
+│   ├── MainViewModel.kt     # State management (MVVM)
+│   ├── RecordSheet.kt       # Record entry/edit dialog
+│   ├── ChartOverlay.kt      # Trend chart (Canvas-drawn)
+│   ├── StatsSummaryCard.kt  # Collapsible statistics card
+│   ├── PdfExporter.kt       # PDF report generation (zero dependencies)
+│   └── theme/               # Colors, typography, Material 3 theme
+└── util/
+    ├── GlucoseValidator.kt  # Input validation (1.0–33.3 mmol/L)
+    └── MealSegment.kt       # 6 meal segments + time-based inference
+```
+
+- **MVVM** — ViewModel talks directly to DAO (no Repository layer, no DI)
+- **Jetpack Compose** — 100% declarative UI
+- **Material 3** — Design system with light/dark theme
+- **StateFlow** — Reactive state management
 
 ## Building
 
@@ -53,51 +78,37 @@ export JAVA_HOME="/path/to/jdk-11"
 
 ## Installation
 
-1. Download the APK from releases or build from source
+1. Download the APK from [Releases](../../releases) or build from source
 2. Enable "Install from unknown sources" on your Android device
 3. Install the APK
 
-## Internationalization
-
-The app supports Chinese (default) and English. To add a new language:
+## Adding a New Language
 
 1. Create `app/src/main/res/values-<locale>/strings.xml`
-2. Copy all entries from `app/src/main/res/values/strings.xml`
+2. Copy all entries from `app/src/main/res/values/strings.xml` (Chinese) or `values-en/strings.xml` (English)
 3. Translate the values
 
 ## Data Safety
 
-- **No `fallbackToDestructiveMigration()`** — updates will never delete your data
-- Over-the-air APK updates preserve all existing records
-- Database schema changes use Room's Migration framework
+- **No `fallbackToDestructiveMigration()`** — updates never destroy your data
+- APK overlay installs preserve all existing records
+- Schema changes use Room's `Migration` framework with SQL scripts
 
-## Project Structure
+## Contributing
 
-```
-app/src/main/java/com/bloodsugar/
-├── MainActivity.kt          # 入口
-├── data/
-│   ├── AppDatabase.kt       # Room 数据库
-│   ├── Record.kt            # 实体：id, value, segment, note, timestamp
-│   ├── RecordDao.kt         # DAO：Flow 查询 + 统计聚合
-│   └── SegmentStats.kt      # 统计数据类
-├── ui/
-│   ├── MainScreen.kt        # 主界面：标题栏 + 统计卡片 + 记录列表
-│   ├── MainViewModel.kt     # 状态管理
-│   ├── RecordSheet.kt       # 新建/编辑弹窗
-│   ├── ChartOverlay.kt      # 趋势图：Canvas 自绘
-│   ├── StatsSummaryCard.kt  # 统计摘要卡片（可折叠）
-│   ├── PdfExporter.kt       # PDF 报告生成（零依赖）
-│   └── theme/               # 颜色、字体、主题
-└── util/
-    ├── GlucoseValidator.kt  # 血糖值校验（1.0-33.3 mmol/L）
-    └── MealSegment.kt       # 6 个餐段枚举 + 时间推断
-```
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+[MIT License](LICENSE) — free to use, modify, and distribute.
 
-## Privacy
+## Why This Exists
 
-This app is fully offline. No data is collected, transmitted, or shared. All blood sugar records are stored locally on your device only.
+Diabetes management requires consistent tracking, but existing apps are often bloated, ad-supported, or require cloud accounts. This app is:
+
+- **Dead simple** — designed for people who find smartphones confusing
+- **Fully offline** — no account, no cloud, no tracking
+- **Zero cost** — no ads, no subscriptions, no paywalls
+- **Shareable** — one-tap PDF export for doctor visits
+
+Built with care for those who need it most.
