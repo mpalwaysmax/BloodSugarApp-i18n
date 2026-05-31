@@ -1,7 +1,7 @@
 # BloodSugar Tracker
 
 [![Android CI](https://github.com/mpalwaysmax/BloodSugarApp-i18n/actions/workflows/android-ci.yml/badge.svg)](https://github.com/mpalwaysmax/BloodSugarApp-i18n/actions/workflows/android-ci.yml)
-[![Tests](https://img.shields.io/badge/tests-15%20passed-brightgreen.svg)](https://github.com/mpalwaysmax/BloodSugarApp-i18n)
+[![Tests](https://img.shields.io/badge/tests-22%20passed-brightgreen.svg)](https://github.com/mpalwaysmax/BloodSugarApp-i18n)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/mpalwaysmax/BloodSugarApp-i18n)](https://github.com/mpalwaysmax/BloodSugarApp-i18n/releases)
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.8-blue.svg)](https://kotlinlang.org)
