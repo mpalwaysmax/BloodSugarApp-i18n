@@ -32,7 +32,7 @@ A lightweight, offline-first Android blood sugar recording app designed for elde
 
 | Main Screen | Record Dialog | Statistics | Trend Chart | Medications |
 |:-----------:|:------------:|:----------:|:-----------:|:-----------:|
-| ![Main](screenshots/main.png) | ![Record](screenshots/record.png) | ![Stats](screenshots/stats.png) | ![Trend](screenshots/trend.png) | ![Medication](screenshots/medication.png) |
+| ![Main](screenshots/main.png) | ![Record](screenshots/record.png) | ![Stats](screenshots/stats.png) | ![Trend](screenshots/trend.png) | ![Medication](screenshots/medications.png) |
 
 ## Tech Stack
 

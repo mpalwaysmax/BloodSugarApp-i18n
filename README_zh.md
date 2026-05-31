@@ -26,7 +26,7 @@
 
 | 主界面 | 记录弹窗 | 统计摘要 | 趋势图 | 药物记录 |
 |:------:|:--------:|:--------:|:------:|:--------:|
-| ![主界面](screenshots/main.png) | ![记录弹窗](screenshots/record.png) | ![统计摘要](screenshots/stats.png) | ![趋势图](screenshots/trend.png) | ![药物记录](screenshots/medication.png) |
+| ![主界面](screenshots/main.png) | ![记录弹窗](screenshots/record.png) | ![统计摘要](screenshots/stats.png) | ![趋势图](screenshots/trend.png) | ![药物记录](screenshots/medications.png) |
 
 ## 技术栈
 
