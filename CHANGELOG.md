@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Automatic meal segment inference based on time of day
 - Statistics summary card (average, max, min per meal segment, collapsible)
 - One-tap PDF report generation with system share (Bluetooth, email, print)
+- Copy summary to clipboard for quick sharing via messaging apps
 - Trend chart with month/year toggle, horizontal scroll, and normal-range indicator
 - Time-based grouping (This Month / This Year / Earlier) with collapsible headers
 - Sort by newest / oldest
@@ -20,6 +21,9 @@ All notable changes to this project will be documented in this file.
 - Room database with migration framework (data preserved across updates)
 - FileProvider for secure PDF sharing
 - Zero third-party dependencies
+- 15 unit tests (GlucoseValidator + MealSegment)
+- GitHub Actions CI (build + test on push/PR)
+- Issue and PR templates for community contributions
 
 ### Technical
 - Kotlin + Jetpack Compose + Material 3
@@ -27,3 +31,4 @@ All notable changes to this project will be documented in this file.
 - Canvas-drawn trend chart (no charting library)
 - Native PdfDocument API (no PDF library)
 - StateFlow for reactive state management
+- JUnit 4 unit tests
