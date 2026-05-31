@@ -1,11 +1,14 @@
 package com.bloodsugar.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +29,7 @@ fun MedicationSheet(
     var name by remember { mutableStateOf(editingMed?.name ?: "") }
     var dosage by remember { mutableStateOf(editingMed?.dosage ?: "") }
     var note by remember { mutableStateOf(editingMed?.note ?: "") }
+    var showNote by remember { mutableStateOf(editingMed?.note?.isNotBlank() == true) }
 
     val isSaveEnabled = name.isNotBlank() && dosage.isNotBlank()
 
@@ -33,7 +37,7 @@ fun MedicationSheet(
         onDismissRequest = onDismiss,
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.7f),
+            .fillMaxHeight(0.92f),
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
         containerColor = MaterialTheme.colorScheme.surface,
         title = null,
@@ -42,9 +46,8 @@ fun MedicationSheet(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(top = 8.dp)
             ) {
-                // Title + close
+                // Title + close button (same as RecordSheet)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -55,7 +58,10 @@ fun MedicationSheet(
                         style = GlucoseTypography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    IconButton(onClick = onDismiss, modifier = Modifier.size(48.dp)) {
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.size(48.dp)
+                    ) {
                         Icon(
                             Icons.Default.Close,
                             contentDescription = stringResource(R.string.cd_close),
@@ -64,9 +70,9 @@ fun MedicationSheet(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                // Name
+                // Medication name (large text input like glucose)
                 Text(
                     stringResource(R.string.med_name),
                     style = GlucoseTypography.bodyLarge,
@@ -77,13 +83,13 @@ fun MedicationSheet(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = GlucoseTypography.bodyLarge,
+                    textStyle = GlucoseTypography.glucoseNumberLarge,
                     singleLine = true
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Dosage
+                // Dosage (large text input like glucose)
                 Text(
                     stringResource(R.string.med_dosage),
                     style = GlucoseTypography.bodyLarge,
@@ -94,37 +100,62 @@ fun MedicationSheet(
                     value = dosage,
                     onValueChange = { dosage = it },
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = GlucoseTypography.bodyLarge,
+                    textStyle = GlucoseTypography.glucoseNumberLarge,
                     placeholder = {
-                        Text("e.g. 500mg", style = GlucoseTypography.bodyLarge)
+                        Text(
+                            "500mg",
+                            style = GlucoseTypography.glucoseNumberLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                        )
                     },
                     singleLine = true
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Note
-                Text(
-                    stringResource(R.string.med_note),
-                    style = GlucoseTypography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                OutlinedTextField(
-                    value = note,
-                    onValueChange = { note = it },
+                // Notes (expandable, same as RecordSheet)
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(80.dp),
-                    textStyle = GlucoseTypography.bodyLarge,
-                    placeholder = {
-                        Text(stringResource(R.string.placeholder_notes), style = GlucoseTypography.bodyLarge)
-                    }
-                )
+                        .height(44.dp)
+                        .clickable { showNote = !showNote },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        stringResource(R.string.med_note),
+                        style = GlucoseTypography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        if (showNote) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                if (showNote) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = note,
+                        onValueChange = { note = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp),
+                        placeholder = {
+                            Text(
+                                stringResource(R.string.placeholder_notes),
+                                style = GlucoseTypography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                        },
+                        textStyle = GlucoseTypography.bodyLarge
+                    )
+                }
 
-                // Save button
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Save button (same style as RecordSheet)
                 Button(
                     onClick = { onSave(name, dosage, note) },
                     modifier = Modifier
@@ -143,8 +174,6 @@ fun MedicationSheet(
                         color = if (isSaveEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
             }
         },
         confirmButton = {},
