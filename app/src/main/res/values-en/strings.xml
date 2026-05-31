@@ -68,6 +68,11 @@
     <string name="snack_updated">Record updated</string>
     <string name="snack_saved">Record saved</string>
 
+    <!-- Unit toggle -->
+    <string name="unit_mmol">mmol/L</string>
+    <string name="unit_mgdl">mg/dL</string>
+    <string name="unit_toggle_cd">Toggle glucose unit</string>
+
     <!-- Stats Summary -->
     <string name="stats_title">Statistics Summary</string>
     <string name="stats_avg">Avg</string>

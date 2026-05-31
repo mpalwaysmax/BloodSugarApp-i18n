@@ -68,6 +68,11 @@
     <string name="snack_updated">记录已更新</string>
     <string name="snack_saved">记录已保存</string>
 
+    <!-- Unit toggle -->
+    <string name="unit_mmol">mmol/L</string>
+    <string name="unit_mgdl">mg/dL</string>
+    <string name="unit_toggle_cd">切换血糖单位</string>
+
     <!-- Stats Summary -->
     <string name="stats_title">统计摘要</string>
     <string name="stats_avg">平均</string>

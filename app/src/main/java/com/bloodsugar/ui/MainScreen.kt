@@ -34,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bloodsugar.R
 import com.bloodsugar.data.Record
 import com.bloodsugar.ui.theme.*
+import com.bloodsugar.util.GlucoseUnit
 import com.bloodsugar.util.MealSegment
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -49,6 +50,7 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val showChart by viewModel.showChart.collectAsState()
     val deleteConfirmRecord by viewModel.deleteConfirmRecord.collectAsState()
     val sortNewestFirst by viewModel.sortNewestFirst.collectAsState()
+    val glucoseUnit by viewModel.glucoseUnit.collectAsState()
     val statsBySegment by viewModel.statsBySegment.collectAsState()
     val showDateRangeDialog by viewModel.showDateRangeDialog.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -138,12 +140,23 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                         Spacer(modifier = Modifier.height(12.dp))
                     }
 
-                    // Action bar: sort + trend chart
+                    // Action bar: unit toggle + sort + trend chart
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        // Unit toggle button
+                        TextButton(
+                            onClick = { viewModel.toggleGlucoseUnit() },
+                            modifier = Modifier.height(48.dp)
+                        ) {
+                            Text(
+                                glucoseUnit.label,
+                                style = GlucoseTypography.bodyLarge,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                         TextButton(
                             onClick = { viewModel.toggleSort() },
                             modifier = Modifier.height(48.dp)
@@ -255,7 +268,8 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                                         RecordCard(
                                             record = record,
                                             onClick = { viewModel.openEditSheet(record) },
-                                            onDelete = { viewModel.requestDelete(record) }
+                                            onDelete = { viewModel.requestDelete(record) },
+                                            glucoseUnit = glucoseUnit
                                         )
                                     }
                                 }
@@ -404,7 +418,8 @@ fun EmptyState() {
 fun RecordCard(
     record: Record,
     onClick: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    glucoseUnit: GlucoseUnit = GlucoseUnit.MMOL
 ) {
     val segment = try {
         MealSegment.valueOf(record.segment)
@@ -458,7 +473,7 @@ fun RecordCard(
                 modifier = Modifier.widthIn(max = 180.dp)
             ) {
                 Text(
-                    text = "%.1f mmol/L".format(record.value),
+                    text = "${GlucoseUnit.formatValue(record.value, glucoseUnit)} ${glucoseUnit.label}",
                     style = GlucoseTypography.glucoseNumber,
                     color = glucoseColor
                 )

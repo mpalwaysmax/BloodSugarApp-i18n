@@ -7,6 +7,7 @@ import com.bloodsugar.R
 import com.bloodsugar.data.AppDatabase
 import com.bloodsugar.data.Record
 import com.bloodsugar.data.SegmentStats
+import com.bloodsugar.util.GlucoseUnit
 import com.bloodsugar.util.GlucoseValidator
 import com.bloodsugar.util.MealSegment
 import kotlinx.coroutines.flow.*
@@ -17,6 +18,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = AppDatabase.getInstance(application).recordDao()
     private val appContext = application.applicationContext
+    private val prefs = application.getSharedPreferences("blood_sugar_prefs", 0)
+
+    // Glucose unit preference
+    private val _glucoseUnit = MutableStateFlow(
+        GlucoseUnit.values().getOrNull(prefs.getInt(GlucoseUnit.PREF_KEY, 0)) ?: GlucoseUnit.MMOL
+    )
+    val glucoseUnit: StateFlow<GlucoseUnit> = _glucoseUnit
 
     // Sort: true=newest first, false=oldest first
     private val _sortNewestFirst = MutableStateFlow(true)
@@ -130,6 +138,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun toggleSort() {
         _sortNewestFirst.value = !_sortNewestFirst.value
+    }
+
+    fun toggleGlucoseUnit() {
+        val newUnit = if (_glucoseUnit.value == GlucoseUnit.MMOL) GlucoseUnit.MGDL else GlucoseUnit.MMOL
+        _glucoseUnit.value = newUnit
+        prefs.edit().putInt(GlucoseUnit.PREF_KEY, newUnit.ordinal).apply()
     }
 
     fun inferSegment(): MealSegment {
